@@ -4,7 +4,7 @@ import time
 import numpy as np
 from scipy import weave
 
-import batched_inv_mp
+import batched_inv_joblib
 
 
 def linear_surplus_confidence_matrix(B, alpha):
@@ -28,7 +28,7 @@ def log_surplus_confidence_matrix(B, alpha, epsilon):
 def factorize(S, num_factors, X=None, vad=None, num_iters=10, init_std=0.01,
               lambda_U_reg=1e-5, lambda_V_reg=1e-5, lambda_W_reg=1e-5,
               dtype='float32', random_state=None, verbose=False,
-              recompute_factors=batched_inv_mp.recompute_factors_batched_mp,
+              recompute_factors=batched_inv_joblib.recompute_factors_batched,
               *args, **kwargs):
 
     num_users, num_items = S.shape

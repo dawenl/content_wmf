@@ -44,9 +44,8 @@ def solve_batch(b, S, Y, WX, YTYpR, batch_size, m, f, dtype):
     return X_stack
 
 
-def recompute_factors_batched_mp(Y, S, lambda_reg, W=None, X=None,
-                                 dtype='float32', batch_size=1,
-                                 n_jobs=4):
+def recompute_factors_batched(Y, S, lambda_reg, W=None, X=None,
+                              dtype='float32', batch_size=1, n_jobs=4):
     m = S.shape[0]  # m = number of users
     f = Y.shape[1]  # f = number of factors
 
