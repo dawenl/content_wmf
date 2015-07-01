@@ -32,7 +32,7 @@ def solve_batch(b, S, Y, WX, YTYpR, batch_size, m, f, dtype):
         A = (s_u + 1).dot(Y_u)
 
         if WX is not None:
-            A += WX[:, ib]
+            A += WX[:, k]
 
         YTSY = np.dot(Y_u.T, (Y_u * s_u[:, None]))
         B = YTSY + YTYpR
@@ -45,14 +45,14 @@ def solve_batch(b, S, Y, WX, YTYpR, batch_size, m, f, dtype):
 
 
 def recompute_factors_batched(Y, S, lambda_reg, W=None, X=None,
-                              dtype='float32', batch_size=1, n_jobs=4):
+                              dtype='float32', batch_size=10000, n_jobs=4):
     m = S.shape[0]  # m = number of users
     f = Y.shape[1]  # f = number of factors
 
     YTY = np.dot(Y.T, Y)  # precompute this
     YTYpR = YTY + lambda_reg * np.eye(f)
     if W is not None:
-        WX = lambda_reg * W.T.dot(X.T)
+        WX = lambda_reg * (X.dot(W)).T
     else:
         WX = None
     X_new = np.zeros((m, f), dtype=dtype)

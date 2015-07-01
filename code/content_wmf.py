@@ -26,7 +26,7 @@ def log_surplus_confidence_matrix(B, alpha, epsilon):
 
 
 def factorize(S, num_factors, X=None, vad=None, num_iters=10, init_std=0.01,
-              lambda_U_reg=1e-5, lambda_V_reg=1e-5, lambda_W_reg=1e-5,
+              lambda_U_reg=1e-2, lambda_V_reg=100, lambda_W_reg=1e-2,
               dtype='float32', random_state=None, verbose=False,
               recompute_factors=batched_inv_joblib.recompute_factors_batched,
               *args, **kwargs):
@@ -37,7 +37,7 @@ def factorize(S, num_factors, X=None, vad=None, num_iters=10, init_std=0.01,
         assert np.all(X[:, -1] == 1)
 
     if verbose:
-        print "precompute S^T and X^TX (if necessary)"
+        print "Precompute S^T and X^TX (if necessary)"
         start_time = time.time()
 
     ST = S.T.tocsr()
@@ -49,7 +49,6 @@ def factorize(S, num_factors, X=None, vad=None, num_iters=10, init_std=0.01,
 
     if verbose:
         print "  took %.3f seconds" % (time.time() - start_time)
-        print "run ALS algorithm"
         start_time = time.time()
 
     if type(random_state) is int:
@@ -80,8 +79,9 @@ def factorize(S, num_factors, X=None, vad=None, num_iters=10, init_std=0.01,
         if verbose:
             print('\r\tUpdating user factors: time=%.2f'
                   % (time.time() - start_t))
-            pred_ll = _pred_loglikeli(U, V, dtype, **vad)
-            print("\tPred likeli: %.5f" % pred_ll)
+            if vad is not None:
+                pred_ll = _pred_loglikeli(U, V, dtype, **vad)
+                print("\tPred likeli: %.5f" % pred_ll)
             sys.stdout.flush()
 
         if X is not None:
